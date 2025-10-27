@@ -1,0 +1,145 @@
+{
+  "rtsp_auth": { 
+    "username": "admin", 
+    "password": "12345" 
+  },
+  "sources": [
+    { 
+      "name": "大门摄像头", 
+      "ip": "192.168.1.101", 
+      "rtsp": "rtsp://admin:12345@192.168.1.101:554/h264/ch1/main/av_stream", 
+      "enabled": true 
+    },
+    { 
+      "name": "院子摄像头", 
+      "ip": "192.168.1.102", 
+      "rtsp": "rtsp://admin:12345@192.168.1.102:554/h264/ch1/sub/av_stream", 
+      "enabled": false 
+    },
+    { 
+      "name": "NVR通道1", 
+      "ip": "192.168.1.200", 
+      "rtsp": "rtsp://admin:12345@192.168.1.200:554/Streaming/Channels/101", 
+      "enabled": true 
+    }
+  ],
+  "modules": {
+    "fire": { 
+      "enabled": true, 
+      "threshold": 0.3, 
+      "model": "models/fire_detector.pt", 
+      "classes": ["fire", "smoke"],
+      "description": "火焰识别"
+    },
+    "smoke": { 
+      "enabled": true, 
+      "threshold": 0.3, 
+      "model": "models/fire_detector.pt", 
+      "classes": ["fire", "smoke"],
+      "description": "烟雾检测"
+    },
+    "plate": { 
+      "enabled": false,
+      "threshold": 0.5,
+      "description": "车牌识别"
+    },
+    "intrusion": { 
+      "enabled": false,
+      "threshold": 0.6,
+      "roi": [[0,0], [1920,0], [1920,1080], [0,1080]],
+      "description": "人员闯入"
+    },
+    "helmet": { 
+      "enabled": false,
+      "threshold": 0.5,
+      "description": "安全帽检测"
+    },
+    "fall": { 
+      "enabled": false,
+      "threshold": 0.6,
+      "description": "跌倒检测"
+    },
+    "fighting": { 
+      "enabled": false,
+      "threshold": 0.5,
+      "description": "打架检测"
+    },
+    "loitering": { 
+      "enabled": false,
+      "time_threshold": 30,
+      "description": "徘徊检测"
+    },
+    "crowd": { 
+      "enabled": false,
+      "count_threshold": 10,
+      "description": "人群聚集"
+    },
+    "vehicle": { 
+      "enabled": false,
+      "threshold": 0.5,
+      "description": "车辆型号检测"
+    },
+    "person": { 
+      "enabled": false,
+      "threshold": 0.5,
+      "description": "车辆数量计数"
+    },
+    "pet": { 
+      "enabled": false,
+      "threshold": 0.5,
+      "description": "抽烟检测"
+    },
+    "face": { 
+      "enabled": false,
+      "threshold": 0.5,
+      "parking_time_threshold": 300,
+      "description": "机动车违停检测"
+    },
+    "mask": { 
+      "enabled": false,
+      "threshold": 0.5,
+      "description": "口罩检测"
+    },
+    "phone": { 
+      "enabled": false,
+      "threshold": 0.5,
+      "description": "打电话检测"
+    },
+    "defect": { 
+      "enabled": false,
+      "threshold": 0.6,
+      "description": "电瓶车进电梯检测"
+    },
+    "spill": { 
+      "enabled": false,
+      "threshold": 0.5,
+      "fatigue_time": 10,
+      "description": "人员疲劳检测"
+    },
+    "door_open": { 
+      "enabled": false,
+      "threshold": 0.5,
+      "parking_area": [[0,0], [1920,1080]],
+      "description": "电瓶车违停检测"
+    },
+    "run": { 
+      "enabled": false,
+      "threshold": 0.5,
+      "description": "奔跑检测"
+    },
+    "crossline": { 
+      "enabled": false,
+      "threshold": 0.5,
+      "description": "人员计数"
+    }
+  },
+  "local_video": { 
+    "last_open_dir": "/data/videos" 
+  },
+  "performance": { 
+    "max_parallel_streams": 4, 
+    "use_substream_for_ai": true,
+    "inference_interval": 1,
+    "display_fps": 30
+  }
+}

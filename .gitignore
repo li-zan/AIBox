@@ -1,0 +1,33 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Virtual environment
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Models (large files)
+*.pt
+*.pth
+*.onnx
+*.engine
+
+# Test files
+*.mp4
+*.avi
+*.ts
+*.mkv
+
+# OS
+.DS_Store
+Thumbs.db
+
