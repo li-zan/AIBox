@@ -162,6 +162,8 @@ class MainWindow(QMainWindow):
         if self.video_worker:
             self.video_worker.stop()
         self._setup_modules()
+        if not self.active_modules:
+            return
         self.video_worker = VideoWorker(self.current_source or '', self.current_is_rtsp, self._on_frame)
         self.video_worker.start()
         self.view.setText("正在连接...")
@@ -189,6 +191,9 @@ class MainWindow(QMainWindow):
                     print(f"✓ Loaded {name}: {cls.__name__}")
         if self.active_modules:
             print(f"Active modules: {list(self.active_modules.keys())}")
+        else:
+            print("No active modules.")
+            self.view.setText("未启用任何检测模块")
 
     def _on_frame(self, frame_bgr: Optional[np.ndarray]) -> None:
         if frame_bgr is None:
@@ -198,12 +203,13 @@ class MainWindow(QMainWindow):
         results: Dict[str, Any] = {}
         for name, mod in self.active_modules.items():
             try:
-                res = mod.infer(frame_bgr)
-                results[name] = res
-                # Only print if detections found
-                if res.get('bboxes'):
-                    print(f"[{name}] Found {len(res['bboxes'])} detections")
-                mod.draw(frame_bgr, res)
+                # res = mod.infer(frame_bgr)
+                # results[name] = res
+                # # Only print if detections found
+                # if res.get('bboxes'):
+                #     print(f"[{name}] Found {len(res['bboxes'])} detections")
+                # mod.draw(frame_bgr, res)
+                mod.process(frame_bgr)
             except Exception as e:
                 print(f"Error in module {name}: {e}")
                 continue

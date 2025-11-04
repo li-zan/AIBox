@@ -15,11 +15,13 @@ def get_registered_modules() -> Dict[str, Type[BaseModule]]:
 try:
     from app.modules.fire_yolo import FireYoloModule
     from app.modules.smoke_yolo import SmokeYoloModule
+    from app.modules.intrusion_yolo import IntrusionYoloModule
+    from app.modules.plate_yolo import PlateYoloModule
 
     register_module('fire', FireYoloModule)
     register_module('smoke', SmokeYoloModule)
-    register_module('plate', None)
-    register_module('intrusion', None)
+    register_module('plate', PlateYoloModule)
+    register_module('intrusion', IntrusionYoloModule)
     register_module('helmet', None)
     register_module('fall', None)
     register_module('fighting', None)

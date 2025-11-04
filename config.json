@@ -25,14 +25,14 @@
   ],
   "modules": {
     "fire": { 
-      "enabled": true, 
+      "enabled": false,
       "threshold": 0.3, 
-      "model": "models/fire_detector.pt", 
+      "model": "models/fire_detector.pt",
       "classes": ["fire", "smoke"],
       "description": "火焰识别"
     },
     "smoke": { 
-      "enabled": true, 
+      "enabled": false,
       "threshold": 0.3, 
       "model": "models/fire_detector.pt", 
       "classes": ["fire", "smoke"],
@@ -40,13 +40,16 @@
     },
     "plate": { 
       "enabled": false,
-      "threshold": 0.5,
+      "model_det": "models/plate_det_yolo11n.pt",
+      "model_rec": "models/plate_rec_lprnet.pth",
+      "threshold": 0.4,
       "description": "车牌识别"
     },
     "intrusion": { 
       "enabled": false,
-      "threshold": 0.6,
-      "roi": [[0,0], [1920,0], [1920,1080], [0,1080]],
+      "model": "models/intrusion_det_yolo11n.pt",
+      "threshold": 0.2,
+      "roi": [[540, 585], [1170, 585], [1446, 321], [990, 305]],
       "description": "人员闯入"
     },
     "helmet": { 

@@ -29,7 +29,7 @@ class FireYoloModule(BaseModule):
         print(f"Fire model ready")
 
     def unload(self) -> None:
-        # del self.model
+        del self.model
         self.model = None
         super().unload()
 
@@ -61,6 +61,59 @@ class FireYoloModule(BaseModule):
         return {"module": self.name, "bboxes": bboxes}
 
     def draw(self, frame_bgr: np.ndarray, results: Dict[str, Any]) -> None:
+        try:
+            import cv2
+            import cvzone
+        except Exception:
+            return
+        for box in results.get("bboxes", []):
+            x1, y1, x2, y2 = box["x1"], box["y1"], box["x2"], box["y2"]
+            w, h = x2 - x1, y2 - y1
+            class_name = box.get('class', '')
+            score = round(box.get('score', 0.0), 2)
+            label = f"{class_name} {score}"
+
+            # Different colors and styles for fire vs smoke
+            if class_name == 'fire':
+                color = (0, 0, 255)  # Red for fire
+                corner_length = 3
+                thickness = 2
+            else:  # smoke
+                color = (0, 255, 255)  # Yellow for smoke
+                corner_length = 30
+                thickness = 5
+
+            cvzone.putTextRect(frame_bgr, label, (max(0, x1 + 10), max(35, y1 - 10)),
+                               1, 1, (0, 255, 255), colorR=(0, 0, 0))
+            cvzone.cornerRect(frame_bgr, (x1, y1, w, h), l=corner_length, colorR=color, t=thickness)
+
+    def process(self, frame_bgr: np.ndarray) -> None:
+        if not self.loaded or self.model is None:
+            raise RuntimeError("FireYoloModule not loaded")
+        # Inference
+        results = self.model(frame_bgr, stream=True)
+        bboxes = []
+        for r in results:
+            boxes = getattr(r, 'boxes', [])
+            for box in boxes:
+                x1, y1, x2, y2 = box.xyxy[0]
+                x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2)
+                conf = float(box.conf[0])
+                cls = int(box.cls[0])
+                # Process both fire (cls==0) and smoke (cls==1)
+                if conf >= self.conf_threshold and 0 <= cls < len(self.class_names):
+                    class_name = self.class_names[cls]
+                    # If this is fire module, only show fire; if smoke module, only show smoke
+                    if (self.name == 'fire' and class_name == 'fire') or \
+                            (self.name == 'smoke' and class_name == 'smoke') or \
+                            (self.name not in ['fire', 'smoke']):  # For generic use
+                        bboxes.append({
+                            "x1": x1, "y1": y1, "x2": x2, "y2": y2,
+                            "score": conf,
+                            "class": class_name,
+                        })
+        results = {"module": self.name, "bboxes": bboxes}
+
         try:
             import cv2
             import cvzone
