@@ -17,27 +17,29 @@ try:
     from app.modules.smoke_yolo import SmokeYoloModule
     from app.modules.intrusion_yolo import IntrusionYoloModule
     from app.modules.plate_yolo import PlateYoloModule
+    from app.modules.helmet_yolo import HelmetYoloModule
+    from app.modules.fatigue_yolo import FatigueYoloModule
 
     register_module('fire', FireYoloModule)
     register_module('smoke', SmokeYoloModule)
     register_module('plate', PlateYoloModule)
     register_module('intrusion', IntrusionYoloModule)
-    register_module('helmet', None)
+    register_module('helmet', HelmetYoloModule)
     register_module('fall', None)
     register_module('fighting', None)
     register_module('loitering', None)
     register_module('crowd', None)
     register_module('vehicle', None)
-    register_module('person', None)
-    register_module('pet', None)
-    register_module('face', None)
+    register_module('vehicle_count', None)
+    register_module('smoking', None)
+    register_module('illegal_parking', None)
     register_module('mask', None)
     register_module('phone', None)
-    register_module('defect', None)
-    register_module('spill', None)
-    register_module('door_open', None)
+    register_module('ebike_in_elevator', None)
+    register_module('fatigue', FatigueYoloModule)
+    register_module('ebike_illegal_parking', None)
     register_module('run', None)
-    register_module('crossline', None)
+    register_module('people_count', None)
 
 except Exception as e:
     # If ultralytics not installed, stub will remain

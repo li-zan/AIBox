@@ -27,16 +27,16 @@ MODULE_NAME_CN = {
     "loitering": "徘徊检测",
     "crowd": "人群聚集",
     "vehicle": "车辆型号检测",
-    "person": "车辆数量计数",
-    "pet": "抽烟检测",
-    "face": "机动车违停检测",
+    "vehicle_count": "车辆数量计数",
+    "smoking": "抽烟检测",
+    "illegal_parking": "机动车违停检测",
     "mask": "口罩检测",
     "phone": "打电话检测",
-    "defect": "电瓶车进电梯检测",
-    "spill": "人员疲劳检测",
-    "door_open": "电瓶车违停检测",
+    "ebike_in_elevator": "电瓶车进电梯检测",
+    "fatigue": "人员疲劳检测",
+    "ebike_illegal_parking": "电瓶车违停检测",
     "run": "奔跑检测",
-    "crossline": "人员计数",
+    "people_count": "人员计数",
 }
 
 

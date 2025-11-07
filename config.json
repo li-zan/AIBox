@@ -27,14 +27,14 @@
     "fire": { 
       "enabled": false,
       "threshold": 0.3, 
-      "model": "models/fire_detector.pt",
+      "model": "models/fire_smoke_det_yolo11n.pt",
       "classes": ["fire", "smoke"],
       "description": "火焰识别"
     },
     "smoke": { 
       "enabled": false,
       "threshold": 0.3, 
-      "model": "models/fire_detector.pt", 
+      "model": "models/fire_smoke_det_yolo11n.pt",
       "classes": ["fire", "smoke"],
       "description": "烟雾检测"
     },
@@ -54,8 +54,19 @@
     },
     "helmet": { 
       "enabled": false,
-      "threshold": 0.5,
-      "description": "安全帽检测"
+      "model": "models/helmet_det_yolo11n.pt",
+      "threshold": 0.45,
+      "min_area": 500,
+      "min_aspect_ratio": 0.3,
+      "max_aspect_ratio": 3.0,
+      "edge_threshold": 20,
+      "description": "安全帽检测",
+      "args_description": {
+        "min_area": "最小检测框面积，排除太小的检测框",
+        "min_aspect_ratio": "检测框最小长宽比，排除长宽比异常的检测框",
+        "max_aspect_ratio": "检测框最大长宽比，排除长宽比异常的检测框",
+        "edge_threshold": "边缘距离阈值，排除在图像边缘的检测框"
+      }
     },
     "fall": { 
       "enabled": false,
@@ -82,17 +93,17 @@
       "threshold": 0.5,
       "description": "车辆型号检测"
     },
-    "person": { 
+    "vehicle_count": {
       "enabled": false,
       "threshold": 0.5,
       "description": "车辆数量计数"
     },
-    "pet": { 
+    "smoking": {
       "enabled": false,
       "threshold": 0.5,
       "description": "抽烟检测"
     },
-    "face": { 
+    "illegal_parking": {
       "enabled": false,
       "threshold": 0.5,
       "parking_time_threshold": 300,
@@ -108,18 +119,19 @@
       "threshold": 0.5,
       "description": "打电话检测"
     },
-    "defect": { 
+    "ebike_in_elevator": {
       "enabled": false,
       "threshold": 0.6,
       "description": "电瓶车进电梯检测"
     },
-    "spill": { 
+    "fatigue": {
       "enabled": false,
-      "threshold": 0.5,
+      "model": "models/fatigue_det_yolo11n.pt",
+      "threshold": 0.25,
       "fatigue_time": 10,
       "description": "人员疲劳检测"
     },
-    "door_open": { 
+    "ebike_illegal_parking": {
       "enabled": false,
       "threshold": 0.5,
       "parking_area": [[0,0], [1920,1080]],
@@ -130,7 +142,7 @@
       "threshold": 0.5,
       "description": "奔跑检测"
     },
-    "crossline": { 
+    "people_count": {
       "enabled": false,
       "threshold": 0.5,
       "description": "人员计数"
