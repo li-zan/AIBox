@@ -10,7 +10,7 @@ A PySide6 GUI application for connecting to Hikvision cameras/NVR via RTSP, sele
 
 ## Requirements
 - Jetson Orin Nano with JetPack (GStreamer preinstalled)
-- Python 3.8+
+- Python 3.10
 
 Install Python deps:
 
