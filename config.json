@@ -50,7 +50,10 @@
       "model": "models/intrusion_det_yolo11n.pt",
       "threshold": 0.2,
       "roi": [[540, 585], [1170, 585], [1446, 321], [990, 305]],
-      "description": "人员闯入"
+      "description": "人员闯入",
+        "args_description": {
+            "roi": "检测区域顶点坐标，按顺时针或逆时针顺序排列"
+        }
     },
     "helmet": { 
       "enabled": false,
