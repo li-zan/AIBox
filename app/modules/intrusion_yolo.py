@@ -33,11 +33,11 @@ class IntrusionYoloModule(BaseModule):
         self.model = None
         super().unload()
 
-    def process(self, frame_bgr: np.ndarray) -> None:
+    def process(self, frame: np.ndarray, frame_bgr: np.ndarray) -> None:
         if not self.loaded or self.model is None:
             raise RuntimeError("IntrusionYoloModule not loaded")
         # Inference
-        results: Iterator[Results] = self.model(frame_bgr, stream=True)
+        results: Iterator[Results] = self.model(frame, classes=[0], conf=self.conf_threshold)
 
         # 绘制危险区域
         zone = np.array(self.roi)
@@ -48,9 +48,6 @@ class IntrusionYoloModule(BaseModule):
             classes = r.boxes.cls.int().cpu().numpy()
             confs = r.boxes.conf.cpu().numpy()
             for box, cls, conf in zip(boxes, classes, confs):
-                if r.names[cls] != "person" or conf < self.conf_threshold:
-                    continue
-
                 x1, y1, x2, y2 = map(int, box)
                 # 底边中点作为位置判断依据
                 cx, cy = int((x1 + x2) / 2), y2

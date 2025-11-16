@@ -28,20 +28,17 @@ class HelmetYoloModule(BaseModule):
         self.model = None
         super().unload()
 
-    def process(self, frame_bgr: np.ndarray) -> None:
+    def process(self, frame: np.ndarray, frame_bgr: np.ndarray) -> None:
         if not self.loaded or self.model is None:
             raise RuntimeError("HelmetYoloModule not loaded")
         # Inference
-        results: Iterator[Results] = self.model(frame_bgr, classes=[0], stream=True)  # 只检测安全帽类别，对应ID 0
+        results: Iterator[Results] = self.model(frame, classes=[0], conf=self.conf_threshold)  # 只检测安全帽类别，对应ID 0
 
         for r in results:
             boxes = r.boxes.xyxy.cpu().numpy()
             classes = r.boxes.cls.int().cpu().numpy()
             confs = r.boxes.conf.cpu().numpy()
             for box, cls, conf in zip(boxes, classes, confs):
-                if conf < self.conf_threshold:
-                    continue
-
                 x1, y1, x2, y2 = map(int, box)
 
                 # 计算检测框的宽度和高度
@@ -67,7 +64,6 @@ class HelmetYoloModule(BaseModule):
                 if (x1 < edge_threshold or y1 < edge_threshold or
                         x2 > width - edge_threshold or y2 > height - edge_threshold):
                     continue
-
 
                 box_color = (0, 0, 255)  # 红色 (BGR)
                 text_color = (255, 255, 255)  # 白色

@@ -27,15 +27,13 @@
     "fire": { 
       "enabled": false,
       "threshold": 0.3, 
-      "model": "models/fire_smoke_det_yolo11n.pt",
-      "classes": ["fire", "smoke"],
+      "model": "models/fire_det_yolo11n.pt",
       "description": "火焰识别"
     },
     "smoke": { 
       "enabled": false,
       "threshold": 0.3, 
-      "model": "models/fire_smoke_det_yolo11n.pt",
-      "classes": ["fire", "smoke"],
+      "model": "models/smoke_det_yolo11n.pt",
       "description": "烟雾检测"
     },
     "plate": { 
@@ -73,11 +71,13 @@
     },
     "fall": { 
       "enabled": false,
-      "threshold": 0.6,
+      "model": "models/fall_det_yolo11n.pt",
+      "threshold": 0.5,
       "description": "跌倒检测"
     },
     "fighting": { 
       "enabled": false,
+      "model": "models/fighting_det_yolo11n.pt",
       "threshold": 0.5,
       "description": "打架检测"
     },
@@ -93,23 +93,30 @@
     },
     "vehicle": { 
       "enabled": false,
+      "model": "models/vehicle_logo_det_yolo11n.pt",
       "threshold": 0.5,
+      "show_stats": true,
       "description": "车辆型号检测"
     },
     "vehicle_count": {
       "enabled": false,
+      "model": "models/vehicle_det_yolo11n.pt",
       "threshold": 0.5,
+      "nms_iou": 0.7,
       "description": "车辆数量计数"
     },
     "smoking": {
       "enabled": false,
-      "threshold": 0.5,
+      "model": "models/smoking_det_yolo11n.pt",
+      "threshold": 0.4,
+      "nms_iou": 0.45,
       "description": "抽烟检测"
     },
     "illegal_parking": {
       "enabled": false,
+      "model": "models/vehicle_det_yolo11n.pt",
       "threshold": 0.5,
-      "parking_time_threshold": 300,
+      "roi": [[100, 100], [600, 100], [600, 400], [100, 400]],
       "description": "机动车违停检测"
     },
     "mask": { 

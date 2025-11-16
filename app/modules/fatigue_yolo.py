@@ -28,11 +28,11 @@ class FatigueYoloModule(BaseModule):
         self.model = None
         super().unload()
 
-    def process(self, frame_bgr: np.ndarray) -> None:
+    def process(self, frame: np.ndarray, frame_bgr: np.ndarray) -> None:
         if not self.loaded or self.model is None:
             raise RuntimeError("FatigueYoloModule not loaded")
         # Inference
-        results: Iterator[Results] = self.model(frame_bgr, stream=True)
+        results: Iterator[Results] = self.model(frame, conf=self.conf_threshold)
 
         # 定义类别颜色（BGR）
         color_map = {
@@ -47,9 +47,6 @@ class FatigueYoloModule(BaseModule):
             classes = r.boxes.cls.int().cpu().numpy()
             confs = r.boxes.conf.cpu().numpy()
             for box, cls, conf in zip(boxes, classes, confs):
-                if conf < self.conf_threshold:
-                    continue
-
                 x1, y1, x2, y2 = map(int, box)
                 label = r.names[cls]  # 获取当前框的标签
                 color = color_map.get(label, (255, 255, 255))  # 获取颜色

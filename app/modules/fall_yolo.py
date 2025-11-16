@@ -7,21 +7,21 @@ from ultralytics.engine.results import Results
 from app.modules.base import BaseModule
 
 
-class FireYoloModule(BaseModule):
-    """火焰识别"""
+class FallYoloModule(BaseModule):
+    """跌倒检测"""
 
     def __init__(self, name: str, config: Dict[str, Any] | None = None) -> None:
         super().__init__(name, config)
         self.model = None
-        self.conf_threshold = float(self.config.get('threshold', self.config.get('conf_threshold', 0.3)))
+        self.conf_threshold = float(self.config.get('threshold', self.config.get('conf_threshold', 0.5)))
 
     def load(self) -> None:
         from ultralytics import YOLO
         model_path = self.config.get('model')
-        print(f"Loading fire model: {model_path}")
+        print(f"Loading fall model: {model_path}")
         self.model = YOLO(model_path)
         self.loaded = True
-        print(f"fire model ready")
+        print(f"fall model ready")
 
     def unload(self) -> None:
         del self.model
@@ -30,7 +30,7 @@ class FireYoloModule(BaseModule):
 
     def process(self, frame: np.ndarray, frame_bgr: np.ndarray) -> None:
         if not self.loaded or self.model is None:
-            raise RuntimeError("FireYoloModule not loaded")
+            raise RuntimeError("FallYoloModule not loaded")
         # Inference
         results: Iterator[Results] = self.model(frame, conf=self.conf_threshold)
 
@@ -39,7 +39,7 @@ class FireYoloModule(BaseModule):
             confs = r.boxes.conf.cpu().numpy()
             for box, conf in zip(boxes, confs):
                 x1, y1, x2, y2 = map(int, box)
-                label = f"fire {conf:.2f}"
+                label = f"fall {conf:.2f}"
 
                 # 绘制红色边界框
                 cv2.rectangle(frame_bgr, (x1, y1), (x2, y2), (0, 0, 255), 2)

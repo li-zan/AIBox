@@ -19,20 +19,26 @@ try:
     from app.modules.plate_yolo import PlateYoloModule
     from app.modules.helmet_yolo import HelmetYoloModule
     from app.modules.fatigue_yolo import FatigueYoloModule
+    from app.modules.vehicle_yolo import VehicleYoloModule
+    from app.modules.smoking_yolo import SmokingYoloModule
+    from app.modules.fall_yolo import FallYoloModule
+    from app.modules.fighting_yolo import FightingYoloModule
+    from app.modules.vehicle_count_yolo import VehicleCountYoloModule
+    from app.modules.illegal_parking_yolo import IllegalParkingYoloModule
 
     register_module('fire', FireYoloModule)
     register_module('smoke', SmokeYoloModule)
     register_module('plate', PlateYoloModule)
     register_module('intrusion', IntrusionYoloModule)
     register_module('helmet', HelmetYoloModule)
-    register_module('fall', None)
-    register_module('fighting', None)
+    register_module('fall', FallYoloModule)
+    register_module('fighting', FightingYoloModule)
     register_module('loitering', None)
     register_module('crowd', None)
-    register_module('vehicle', None)
-    register_module('vehicle_count', None)
-    register_module('smoking', None)
-    register_module('illegal_parking', None)
+    register_module('vehicle', VehicleYoloModule)
+    register_module('vehicle_count', VehicleCountYoloModule)
+    register_module('smoking', SmokingYoloModule)
+    register_module('illegal_parking', IllegalParkingYoloModule)
     register_module('mask', None)
     register_module('phone', None)
     register_module('ebike_in_elevator', None)

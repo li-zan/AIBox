@@ -1,5 +1,6 @@
 from typing import Any, Dict, Optional
 import os
+import time
 
 import cv2
 import numpy as np
@@ -199,8 +200,10 @@ class MainWindow(QMainWindow):
         if frame_bgr is None:
             self.view.setText("无法打开视频源")
             return
+        frame = np.copy(frame_bgr)
         # run modules in sequence (demo); real impl can batch/async
-        results: Dict[str, Any] = {}
+        # results: Dict[str, Any] = {}
+        start = time.perf_counter()
         for name, mod in self.active_modules.items():
             try:
                 # res = mod.infer(frame_bgr)
@@ -209,8 +212,11 @@ class MainWindow(QMainWindow):
                 # if res.get('bboxes'):
                 #     print(f"[{name}] Found {len(res['bboxes'])} detections")
                 # mod.draw(frame_bgr, res)
-                mod.process(frame_bgr)
+                mod.process(frame, frame_bgr)
             except Exception as e:
                 print(f"Error in module {name}: {e}")
                 continue
+        end = time.perf_counter()
+        elapsed_ms = (end - start) * 1000
+        print(f"Processed frame in {elapsed_ms:.2f} ms")
         self.view.show_frame(frame_bgr)

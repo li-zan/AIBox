@@ -31,6 +31,6 @@ class BaseModule:
         """Optionally overlay results to the frame in place."""
         return
 
-    def process(self, frame_bgr: np.ndarray) -> None:
+    def process(self, frame: np.ndarray, frame_bgr: np.ndarray) -> None:
         """Infer, draw and postprocess in one step."""
         return

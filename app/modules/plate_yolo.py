@@ -36,20 +36,17 @@ class PlateYoloModule(BaseModule):
         self.model_rec = None
         super().unload()
 
-    def process(self, frame_bgr: np.ndarray) -> None:
+    def process(self, frame: np.ndarray, frame_bgr: np.ndarray) -> None:
         if not self.loaded or self.model_det is None or self.model_rec is None:
             raise RuntimeError("PlateYoloModule not loaded")
         # Inference
-        results: Iterator[Results] = self.model_det(frame_bgr, stream=True)
+        results: Iterator[Results] = self.model_det(frame, conf=self.conf_threshold)
 
         for r in results:
             boxes = r.boxes.xyxy.cpu().numpy()
             classes = r.boxes.cls.int().cpu().numpy()
             confs = r.boxes.conf.cpu().numpy()
             for box, cls, conf in zip(boxes, classes, confs):
-                if conf < self.conf_threshold:
-                    continue
-
                 x1, y1, x2, y2 = map(int, box)
                 color = (0, 255, 0)
 
