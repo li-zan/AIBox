@@ -1,62 +1,66 @@
 {
-  "rtsp_auth": { 
-    "username": "admin", 
-    "password": "12345" 
+  "rtsp_auth": {
+    "username": "admin",
+    "password": "12345"
   },
   "sources": [
-    { 
-      "name": "大门摄像头", 
-      "ip": "192.168.1.101", 
-      "rtsp": "rtsp://admin:12345@192.168.1.101:554/h264/ch1/main/av_stream", 
-      "enabled": true 
+    {
+      "name": "大门摄像头",
+      "ip": "192.168.1.101",
+      "rtsp": "rtsp://admin:12345@192.168.1.101:554/h264/ch1/main/av_stream",
+      "enabled": true
     },
-    { 
-      "name": "院子摄像头", 
-      "ip": "192.168.1.102", 
-      "rtsp": "rtsp://admin:12345@192.168.1.102:554/h264/ch1/sub/av_stream", 
-      "enabled": false 
+    {
+      "name": "院子摄像头",
+      "ip": "192.168.1.102",
+      "rtsp": "rtsp://admin:12345@192.168.1.102:554/h264/ch1/sub/av_stream",
+      "enabled": false
     },
-    { 
-      "name": "NVR通道1", 
-      "ip": "192.168.1.200", 
-      "rtsp": "rtsp://admin:12345@192.168.1.200:554/Streaming/Channels/101", 
-      "enabled": true 
+    {
+      "name": "NVR通道1",
+      "ip": "192.168.1.200",
+      "rtsp": "rtsp://admin:12345@192.168.1.200:554/Streaming/Channels/101",
+      "enabled": true
     }
   ],
   "modules": {
-    "fire": { 
+    "fire": {
       "enabled": false,
-      "threshold": 0.3, 
+      "conf_threshold": 0.3,
       "model": "models/fire_det_yolo11n.pt",
       "description": "火焰识别"
     },
-    "smoke": { 
+    "smoke": {
       "enabled": false,
-      "threshold": 0.3, 
+      "conf_threshold": 0.3,
       "model": "models/smoke_det_yolo11n.pt",
       "description": "烟雾检测"
     },
-    "plate": { 
+    "plate": {
       "enabled": false,
       "model_det": "models/plate_det_yolo11n.pt",
-      "model_rec": "models/plate_rec_lprnet.pth",
-      "threshold": 0.4,
-      "description": "车牌识别"
+      "model_rec": "models/plate_rec_lprnetv2.pt",
+      "conf_threshold": 0.4,
+      "border_threshold": 5,
+      "description": "车牌识别",
+      "args_description": {
+          "border_threshold": "车牌边缘距离阈值，排除在图像边缘的车牌，避免误识别"
+      }
     },
-    "intrusion": { 
+    "intrusion": {
       "enabled": false,
-      "model": "models/intrusion_det_yolo11n.pt",
-      "threshold": 0.2,
+      "model": "models/people_det_yolo11n.pt",
+      "conf_threshold": 0.5,
       "roi": [[540, 585], [1170, 585], [1446, 321], [990, 305]],
       "description": "人员闯入",
-        "args_description": {
-            "roi": "检测区域顶点坐标，按顺时针或逆时针顺序排列"
-        }
+      "args_description": {
+          "roi": "检测区域顶点坐标，按顺时针或逆时针顺序排列"
+      }
     },
-    "helmet": { 
+    "helmet": {
       "enabled": false,
       "model": "models/helmet_det_yolo11n.pt",
-      "threshold": 0.45,
+      "conf_threshold": 0.45,
       "min_area": 500,
       "min_aspect_ratio": 0.3,
       "max_aspect_ratio": 3.0,
@@ -69,100 +73,146 @@
         "edge_threshold": "边缘距离阈值，排除在图像边缘的检测框"
       }
     },
-    "fall": { 
+    "fall": {
       "enabled": false,
       "model": "models/fall_det_yolo11n.pt",
-      "threshold": 0.5,
+      "conf_threshold": 0.5,
       "description": "跌倒检测"
     },
-    "fighting": { 
+    "fighting": {
       "enabled": false,
       "model": "models/fighting_det_yolo11n.pt",
-      "threshold": 0.5,
+      "conf_threshold": 0.5,
       "description": "打架检测"
     },
-    "loitering": { 
+    "loitering": {
       "enabled": false,
-      "time_threshold": 30,
-      "description": "徘徊检测"
+      "model": "models/loitering_det_yolo11n.pt",
+      "conf_threshold": 0.25,
+      "total_distance_threshold": 200,
+      "stay_time_threshold": 10,
+      "initial_distance_threshold": 100,
+      "max_age": 70,
+      "description": "徘徊检测",
+      "args_description": {
+          "total_distance_threshold": "最小累计移动距离(像素)。动起来的总距离超过此值，才开始计算徘徊",
+          "stay_time_threshold": "徘徊时间阈值(秒)，目标在区域内停留超过此时间才报警",
+          "initial_distance_threshold": "徘徊半径(像素)。以目标第一次出现的位置为圆心，多少像素内算'没离开'。数值越大，检测范围越宽容",
+          "max_age": "抗遮挡，目标丢失后的保留帧数。如果有树木/柱子遮挡，调高参数(如150)防止ID丢失；如果是开阔地带，保持70即可"
+      }
     },
-    "crowd": { 
+    "crowd": {
       "enabled": false,
-      "count_threshold": 10,
-      "description": "人群聚集"
+      "model": "models/people_det_yolo11n.pt",
+      "conf_threshold": 0.25,
+      "person_threshold": 5,
+      "distance_threshold_ratio": 0.3,
+      "description": "人群聚集",
+      "args_description": {
+          "person_threshold": "人群数量阈值，超过该数量则报警",
+          "distance_threshold_ratio": "人员间距阈值系数，人员间距=帧宽*间距系数，低于该距离则认为人员过于密集"
+      }
     },
-    "vehicle": { 
+    "vehicle": {
       "enabled": false,
       "model": "models/vehicle_logo_det_yolo11n.pt",
-      "threshold": 0.5,
+      "conf_threshold": 0.5,
       "show_stats": true,
       "description": "车辆型号检测"
     },
     "vehicle_count": {
       "enabled": false,
       "model": "models/vehicle_det_yolo11n.pt",
-      "threshold": 0.5,
+      "conf_threshold": 0.5,
       "nms_iou": 0.7,
       "description": "车辆数量计数"
     },
     "smoking": {
       "enabled": false,
       "model": "models/smoking_det_yolo11n.pt",
-      "threshold": 0.4,
+      "conf_threshold": 0.4,
       "nms_iou": 0.45,
       "description": "抽烟检测"
     },
     "illegal_parking": {
       "enabled": false,
       "model": "models/vehicle_det_yolo11n.pt",
-      "threshold": 0.5,
+      "conf_threshold": 0.5,
       "roi": [[100, 100], [600, 100], [600, 400], [100, 400]],
       "description": "机动车违停检测"
     },
-    "mask": { 
+    "mask": {
       "enabled": false,
-      "threshold": 0.5,
+      "model": "models/mask_det_yolo11n.pt",
+      "conf_threshold": 0.5,
       "description": "口罩检测"
     },
-    "phone": { 
+    "phone": {
       "enabled": false,
-      "threshold": 0.5,
+      "model_det": "models/phone_det_yolo11n.pt",
+      "model_pose": "models/phone_pose_yolo11n.pt",
+      "conf_threshold_det": 0.15,
+      "conf_threshold_pose": 0.5,
       "description": "打电话检测"
     },
     "ebike_in_elevator": {
       "enabled": false,
-      "threshold": 0.6,
+      "model": "models/ebike_det_yolo11n.pt",
+      "conf_threshold": 0.25,
+      "roi": [[200, 200], [600, 200], [600, 500], [200, 500]],
       "description": "电瓶车进电梯检测"
     },
     "fatigue": {
       "enabled": false,
       "model": "models/fatigue_det_yolo11n.pt",
-      "threshold": 0.25,
-      "fatigue_time": 10,
-      "description": "人员疲劳检测"
+      "conf_threshold": 0.5,
+      "eye_closed_threshold": 30,
+      "mouth_open_threshold": 20,
+      "description": "人员疲劳检测",
+      "args_description": {
+          "eye_closed_threshold": "眼睛闭合帧数阈值，超过该帧数则认为疲劳",
+          "mouth_open_threshold": "嘴巴张开（打哈欠）帧数阈值，超过该帧数则认为疲劳"
+      }
     },
     "ebike_illegal_parking": {
       "enabled": false,
-      "threshold": 0.5,
-      "parking_area": [[0,0], [1920,1080]],
+      "model": "models/ebike_det_yolo11n.pt",
+      "conf_threshold": 0.25,
+      "roi": [[200, 200], [600, 200], [600, 500], [200, 500]],
       "description": "电瓶车违停检测"
     },
-    "run": { 
+    "run": {
       "enabled": false,
-      "threshold": 0.5,
-      "description": "奔跑检测"
+      "model": "models/run_pose_yolo11n.pt",
+      "conf_threshold": 0.25,
+      "frame_bounce_threshold": 10.5,
+      "consistency_threshold_entry": 0.55,
+      "stride_threshold": 0.30,
+      "anomaly_b_threshold": 12.0,
+      "description": "奔跑检测",
+      "args_description": {
+          "frame_bounce_threshold": "如果画面里人很小或跑得很慢，调低参数(8.5-9.5)；走路经常误判为跑步，调高参数(11.0-12.5)，默认10.5",
+          "consistency_threshold_entry": "0-1之间。如果跑步反应太慢或难变红，调低参数(0.45)；走路经常误判为跑步，调高参数(0.65)，默认0.55",
+          "stride_threshold": "侧面拍摄时，如果大跨步没识别出来，调低参数(0.25)；侧面走路误判，调高参数(0.35)，默认0.30",
+          "anomaly_b_threshold": "如果正常跑步经常被判定为颠簸异常而扣分，调高参数(13.0-14.0)，默认12.0"
+      }
     },
     "people_count": {
       "enabled": false,
-      "threshold": 0.5,
-      "description": "人员计数"
+      "model": "models/people_det_yolo11n.pt",
+      "conf_threshold": 0.65,
+      "min_box_area": 300,
+      "description": "人员计数",
+      "args_description": {
+        "min_box_area": "最小检测框面积，排除太小的检测框"
+      }
     }
   },
-  "local_video": { 
-    "last_open_dir": "/data/videos" 
+  "local_video": {
+    "last_open_dir": "/data/videos"
   },
-  "performance": { 
-    "max_parallel_streams": 4, 
+  "performance": {
+    "max_parallel_streams": 4,
     "use_substream_for_ai": true,
     "inference_interval": 1,
     "display_fps": 30
