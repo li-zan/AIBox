@@ -24,7 +24,7 @@ def draw_chinese_label(frame, label, x1, y1, scale=0.7, thickness=2, color=(0, 2
 
     # 字体
     font_size = int(25 * scale + thickness * 2)
-    font = ImageFont.truetype("E:/prj/dl/AIBox/aibox-train/font/msyh.ttf", font_size)
+    font = ImageFont.truetype("./font/msyh.ttf", font_size)
 
     # BGR → RGB
     color_rgb = (color[2], color[1], color[0])
@@ -72,7 +72,7 @@ def draw_chinese_label_inplace(frame, label, x1, y1, scale=0.7, thickness=2, col
 
     # 字体
     font_size = int(25 * scale + thickness * 2)
-    font = ImageFont.truetype("E:/prj/dl/AIBox/aibox-train/font/msyh.ttf", font_size)
+    font = ImageFont.truetype("./font/msyh.ttf", font_size)
 
     # BGR → RGB
     color_rgb = (color[2], color[1], color[0])
