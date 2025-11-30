@@ -115,7 +115,7 @@
     },
     "vehicle": {
       "enabled": false,
-      "model": "models/vehicle_logo_det_yolo11n.pt",
+      "model": "models/vehicle_type_det_yolo11n.pt",
       "conf_threshold": 0.5,
       "show_stats": true,
       "description": "车辆型号检测"

@@ -19,10 +19,10 @@ class VehicleYoloModule(BaseModule):
     def load(self) -> None:
         from ultralytics import YOLO
         model_path = self.config.get('model')
-        print(f"Loading vehicle model: {model_path}")
+        print(f"Loading vehicle_type model: {model_path}")
         self.model = YOLO(model_path)
         self.loaded = True
-        print(f"vehicle model ready")
+        print(f"vehicle_type model ready")
 
     def unload(self) -> None:
         del self.model
