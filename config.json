@@ -5,10 +5,16 @@
   },
   "sources": [
     {
+      "name": "海康摄像头-test",
+      "ip": "192.168.3.108",
+      "rtsp": "rtsp://admin:haikang2025@192.168.3.108:554",
+      "enabled": true
+    },
+    {
       "name": "大门摄像头",
       "ip": "192.168.1.101",
       "rtsp": "rtsp://admin:12345@192.168.1.101:554/h264/ch1/main/av_stream",
-      "enabled": true
+      "enabled": false
     },
     {
       "name": "院子摄像头",
@@ -82,7 +88,7 @@
     "fighting": {
       "enabled": false,
       "model": "models/fighting_det_yolo11n.pt",
-      "conf_threshold": 0.5,
+      "conf_threshold": 0.6,
       "description": "打架检测"
     },
     "loitering": {
